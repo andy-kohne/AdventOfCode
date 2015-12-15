@@ -9,6 +9,17 @@ void Main()
 	}).ToList();
 	
 	
+	// part 1
+	CalculateHappiness(measurements).Dump();
+	
+	
+	// part 2
+	measurements.AddRange(measurements.Select(m => m.Person).Distinct().SelectMany(p => new [] { new Measurement { Person = "Me", Adjacent = p, HappinessUnits = 0 }, new Measurement { Person = p, Adjacent="Me" , HappinessUnits = 0}}).ToList());
+	CalculateHappiness(measurements).Dump();
+}
+
+int CalculateHappiness(List<Measurement> measurements)
+{
 	var possibilities = Permutations(measurements.Select(m => m.Person).Distinct().ToList()).ToList();
 	var happiness = possibilities.Select(p => p.ToArray()).Select(p => 
 	{
@@ -22,7 +33,7 @@ void Main()
 		return score;
 	});
 	
-	happiness.OrderByDescending(s => s).First ().Dump();
+	return happiness.OrderByDescending(s => s).First ();
 }
 
 public class Measurement
