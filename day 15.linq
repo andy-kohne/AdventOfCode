@@ -41,10 +41,7 @@ public IEnumerable<int[]> GetAll()
 	for (var a=0; a <= 100; a++) {
 		for (var b=0; b <= 100 -a ; b++) {
 			for (var c=0; c <= 100 -a -b; c++) {
-				for (var d=0; d <= 100 -a -b -c; d++) {
-					if ((a+b+c+d) == 100)
-						yield return new [] { a,b,c,d};
-				}
+				yield return new [] { a,b,c,100-a-b-c};
 			}
 		}
 	}
