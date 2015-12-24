@@ -2,7 +2,7 @@
   <Output>DataGrids</Output>
 </Query>
 
-var strings = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day8.txt"));
+var strings = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day8.txt"));
 
 
 // part 1

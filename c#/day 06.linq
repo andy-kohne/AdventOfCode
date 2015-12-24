@@ -3,7 +3,7 @@
   <Namespace>System.Drawing</Namespace>
 </Query>
 
-var instructions = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day6.txt"));
+var instructions = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day6.txt"));
 
 var grid = new Boolean[1000, 1000];
 var intensity = new int[1000, 1000];

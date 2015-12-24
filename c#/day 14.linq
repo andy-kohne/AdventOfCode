@@ -5,7 +5,7 @@
 void Main()
 {
 	var reindeer = 
-			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day14.txt"))
+			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day14.txt"))
 				.Select(s => 
 				{
 					var m = Regex.Match(s, @"^([^ ]+) .* (\d+) .* (\d+) .* (\d+)" );

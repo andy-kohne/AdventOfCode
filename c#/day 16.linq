@@ -4,7 +4,7 @@
 
 void Main()
 {
-	var auntSues = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day16.txt")).Select (f => ParseSue(f));
+	var auntSues = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day16.txt")).Select (f => ParseSue(f));
 
 	// part 1
 	auntSues.Where(a => a.Children == null || a.Children == 3)

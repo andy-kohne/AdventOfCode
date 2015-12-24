@@ -5,7 +5,7 @@
 void Main()
 {
 	var input = 
-			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day19.txt"));
+			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day19.txt"));
 			
 	var replacements = 
 			input.Where(i => i.Contains("=>"))
@@ -48,4 +48,3 @@ public class ParticleReplacement
 	public string Particle  { get; set; }
 	public string Replacement { get; set; }
 }
-

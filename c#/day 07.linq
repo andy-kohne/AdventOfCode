@@ -4,7 +4,7 @@
 
 void Main()
 {
-	var instructions = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day7.txt")).Select(l => l.Split(new string [] { " -> "}, StringSplitOptions.None)).ToDictionary (x => x[1], x=> new Gate { Input = x[0]});
+	var instructions = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day7.txt")).Select(l => l.Split(new string [] { " -> "}, StringSplitOptions.None)).ToDictionary (x => x[1], x=> new Gate { Input = x[0]});
 	
 	// part 1
 	Resolve(instructions);

@@ -4,7 +4,7 @@
 
 void Main()
 {
-	var segments = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day9.txt")).Select(s => { var m = Regex.Match(s, @"([^ ]+) to ([^ ]+) = (\d+)"); return new Segment { PointA = m.Groups[1].Value, PointB = m.Groups[2].Value, Distance = int.Parse(m.Groups[3].Value)};  }).ToList();
+	var segments = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day9.txt")).Select(s => { var m = Regex.Match(s, @"([^ ]+) to ([^ ]+) = (\d+)"); return new Segment { PointA = m.Groups[1].Value, PointB = m.Groups[2].Value, Distance = int.Parse(m.Groups[3].Value)};  }).ToList();
 	
 	var possibilities = Permutations( segments.Select(s => s.PointA).Concat(segments.Select(s => s.PointB)).Distinct());
 	var routes = possibilities.Select(p => Calculate(p, segments));

@@ -2,7 +2,7 @@
   <Output>DataGrids</Output>
 </Query>
 
-var boxes = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day2.txt")).Where(b => !string.IsNullOrWhiteSpace(b)).Select (b => b.Split('x').Select(l => int.Parse(l)).ToArray());
+var boxes = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day2.txt")).Where(b => !string.IsNullOrWhiteSpace(b)).Select (b => b.Split('x').Select(l => int.Parse(l)).ToArray());
 
 // part 1
 var paper = boxes.Select(b => 

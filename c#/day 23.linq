@@ -5,7 +5,7 @@
 void Main()
 {
 	var input = 
-			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day23.txt"))
+			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day23.txt"))
 				.ToArray();
 			
 	var registers = new Dictionary<char,uint> { {'a', 0}, {'b', 0}};

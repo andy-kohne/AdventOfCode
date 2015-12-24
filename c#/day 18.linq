@@ -5,7 +5,7 @@
 void Main()
 {
 	var gridOrigin = new bool [100,100];
-	var input =	File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day18.txt")).ToArray();
+	var input =	File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day18.txt")).ToArray();
 	
 	for(var x = 0; x<input.Length; x++)
 		for (var y = 0; y<input[x].Length; y++)

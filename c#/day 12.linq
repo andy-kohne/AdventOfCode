@@ -6,7 +6,7 @@
 
 void Main()
 {
-	var path = Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day12.txt");
+	var path = Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day12.txt");
 	
 	
 	// part 1

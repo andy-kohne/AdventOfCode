@@ -2,7 +2,7 @@
 
 void Main()
 {
-	var measurements = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day13.txt")).Select(s => 
+	var measurements = File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day13.txt")).Select(s => 
 	{ 
 		var m = Regex.Match(s, @"([^ ]+) would (gain|lose) (\d+) .* ([^ ]+)\."); 
 		return new Measurement { Person = m.Groups[1].Value, Adjacent = m.Groups[4].Value, HappinessUnits = int.Parse(m.Groups[3].Value) * (m.Groups[2].Value == "lose" ? -1 : 1) };  

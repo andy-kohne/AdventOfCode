@@ -5,7 +5,7 @@
 void Main()
 {
 	var containers = 
-			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day17.txt"))
+			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day17.txt"))
 				.Select (f => int.Parse(f)).OrderByDescending(f => f)
 				.ToArray();
 	

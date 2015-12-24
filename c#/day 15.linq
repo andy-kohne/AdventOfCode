@@ -5,7 +5,7 @@
 void Main()
 {
 	var ingredients = 
-			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"day15.txt"))
+			File.ReadAllLines(Path.Combine(Path.GetDirectoryName (Util.CurrentQueryPath),"..","day15.txt"))
 				.Select(s => 
 				{
 					var m = Regex.Match(s, @"(.+)\: capacity (-?\d+), durability (-?\d+), flavor (-?\d+), texture (-?\d+), calories (\d+)" );
