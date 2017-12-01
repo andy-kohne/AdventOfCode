@@ -1,0 +1,31 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+body, 
+body header h1, 
+body header h2, 
+body h1, 
+body h2, 
+body h3,
+pre, code
+{
+    font-family: "Source Code Pro", monospace !important; 
+}
+header h1 {
+    color: #00cc00;
+    text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
+}
+h2:not(.description){
+    text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;    
+}
+h1, h2, h3, h4, h5, h6{
+    color: #00cc00;    
+}
+header h1::before {
+    content: "./";
+}
+.container {
+    max-width: none;
+}
