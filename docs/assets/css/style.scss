@@ -14,14 +14,17 @@ code
 {
     font-family: "Source Code Pro", monospace !important; 
 }
+
 pre, 
 code
 {
     font-size:12px !important;
 }
+
 header h1 {
     font-weight: normal;
 }
+
 .container h1,
 header h1,
 h2:not(.description)
@@ -29,18 +32,32 @@ h2:not(.description)
     color: #00cc00;    
     text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
 }
+
 h1, h2, h3, h4, h5, h6{
     color: #00cc00;    
 }
+
 header h1::before {
     content: "./";
 }
+
 .container {
     max-width: none;
 }
-h2 {
+
+h3 {
     padding-top:8px;
 }
-.description{
+
+.description {
     font-size:20px;
+}
+
+a {
+    color: #009900;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #99ff99;
 }
