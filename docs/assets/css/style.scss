@@ -13,8 +13,7 @@ pre, code
 {
     font-family: "Source Code Pro", monospace !important; 
 }
-h1 {
-    color: #00cc00;
+.container h1 {
     text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
 }
 h2:not(.description){
