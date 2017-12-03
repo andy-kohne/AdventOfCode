@@ -9,9 +9,18 @@ body header h2,
 body h1, 
 body h2, 
 body h3,
-pre, code
+pre, 
+code
 {
     font-family: "Source Code Pro", monospace !important; 
+}
+pre, 
+code
+{
+    font-size:12px !important;
+}
+header h1 {
+    font-weight: normal;
 }
 .container h1,
 header h1,
@@ -30,7 +39,7 @@ header h1::before {
     max-width: none;
 }
 h2 {
-    padding-top:5px;
+    padding-top:8px;
 }
 .description{
     font-size:20px;
