@@ -20,13 +20,20 @@ var input = @"5048	177	5280	5058	4504	3805	5735	220	4362	1809	1521	230	772	1088	
 296	306	1953	3538	248	1579	4326	2178	5021	2529	794	5391	4712	3734	261	4362
 2426	192	1764	288	4431	2396	2336	854	2157	216	4392	3972	229	244	4289	1902";
 
-var lines = input.Split(new [] { "\r\n" }, StringSplitOptions.None).Select(l => l.Split('\t').Select(i => int.Parse(i)));
+var lines = input.Split(new[] { "\r\n" }, StringSplitOptions.None).Select(l => l.Split('\t').Select(i => int.Parse(i)));
 
 // part 1
 var part1 = lines.Select(l => l.Max() - l.Min()).Sum();
 part1.Dump();
 
 // part 2
-Func<int[], int> EvenlyDivisible = src => { for (int o = 0; o < src.Length; o++) { for (int i = 0; i < src.Length; i++){ if (i != o && src[o] % src[i] == 0) return src[o]/src[i];}}; return 0;};
-var part2 = lines.Select(l => EvenlyDivisible(l.ToArray())).Sum();
+Func<int[], int> EvenlyDivide = src =>
+{
+	for (int o = 0; o < src.Length; o++)
+		for (int i = 0; i < src.Length; i++)
+			if (i != o && src[o] % src[i] == 0)
+				return src[o] / src[i];
+	return 0;
+};
+var part2 = lines.Select(l => EvenlyDivide(l.ToArray())).Sum();
 part2.Dump();

@@ -58,7 +58,16 @@ var part2 = grid.Values.Max();
 ```csharp
 var part1 = lines.Select(l => l.Max() - l.Min()).Sum();
 
-Func<int[], int> EvenlyDivisible = src => { for (int o = 0; o < src.Length; o++) { for (int i = 0; i < src.Length; i++){ if (i != o && src[o] % src[i] == 0) return src[o]/src[i];}}; return 0;};
+Func<int[], int> EvenlyDivide = src =>
+{
+Func<int[], int> EvenlyDivide = src =>
+{
+	for (int o = 0; o < src.Length; o++)
+		for (int i = 0; i < src.Length; i++)
+			if (i != o && src[o] % src[i] == 0)
+				return src[o] / src[i];
+	return 0;
+};
 var part2 = lines.Select(l => EvenlyDivisible(l.ToArray())).Sum();
 ```
 
