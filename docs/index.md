@@ -4,6 +4,16 @@ layout: default
 
 # 2017
 
+### Day 4 - [[High-Entropy Passphrases]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%204%20-%20High-Entropy%20Passphrases.linq)
+
+```csharp
+var part1 = input.Select(i => i.Split().GroupBy(x => x)).Where(o => o.All(oo => oo.Count() == 1)).Count();
+
+var part2 = input.Select(i => i.Split().Select(w => new string(w.OrderBy(c => c).ToArray())).GroupBy(w => w))
+				 .Where(o => o.All(w => w.Count() == 1)).Count();
+```
+
+
 ### Day 3 - [[Spiral Memory]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%203%20-%20Spiral%20Memory.linq)
 
 ```csharp
