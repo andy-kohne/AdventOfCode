@@ -72,7 +72,7 @@ var part2 = lines.Select(l => EvenlyDivisible(l.ToArray())).Sum();
 ```
 
 
-### Day 1 - [[Inverse Captcha]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%201.linq)
+### Day 1 - [[Inverse Captcha]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%202%20-%20Inverse%20Captcha.linq)
 
 ```csharp
 var part1 = input.Zip(input.Skip(1).Concat(input), (a, b) => a == b ? a - '0' : 0).Sum();
