@@ -25,6 +25,11 @@ header h1 {
     font-weight: normal;
 }
 
+header {
+    background: none;
+    border-bottom: none;
+    margin-bottom: 0px;
+}
 .container h1,
 header h1,
 h2:not(.description)
