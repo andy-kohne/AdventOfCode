@@ -4,6 +4,35 @@ layout: default
 
 # 2017
 
+### Day 5 - [[A Maze of Twisty Trampolines, All Alike]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%205%20-%20A Maze of Twisty Trampolines, All Alike.linq)
+
+```csharp
+var jumps = input.ToArray();
+var pos = 0;
+var part1 = 0;
+while (pos < jumps.Length)
+{
+	part1++;
+	var offset = jumps[pos]++;
+	pos += offset;
+}
+
+jumps = input.ToArray();
+pos = 0;
+var part2 = 0;
+while (pos < jumps.Length)
+{
+	part2++;
+	var offset = jumps[pos];
+	if (offset >= 3)
+		jumps[pos]--;
+	else
+		jumps[pos]++;
+	pos += offset;
+}
+```
+
+
 ### Day 4 - [[High-Entropy Passphrases]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%204%20-%20High-Entropy%20Passphrases.linq)
 
 ```csharp
