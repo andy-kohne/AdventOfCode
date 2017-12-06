@@ -4,7 +4,7 @@ layout: default
 
 # 2017
 
-### Day 6 - [[Memory Reallocation]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 6 - Memory Reallocation.linq)
+### Day 6 - [[Memory Reallocation]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 6 - Memory Reallocation.linq) {% include image.html file="LINQPad.png" url="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day%206%20-%20Memory%20Reallocation.linq" alt="Download LinqPad script" %}
 
 ```csharp
 // part 1
