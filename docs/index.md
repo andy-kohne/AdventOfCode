@@ -4,7 +4,51 @@ layout: default
 
 # 2017
 
-### Day 5 - [[A Maze of Twisty Trampolines, All Alike]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%205%20-%20A Maze of Twisty Trampolines, All Alike.linq)
+### Day 6 - [[Memory Reallocation]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 6 - Memory Reallocation.linq)
+
+```csharp
+// part 1
+var allocations = new List<string>();
+var stamp = input.Aggregate("", (a,s) => a+','+s);
+while(!allocations.Contains(stamp)) {
+	allocations.Add(stamp);
+	var pos = input.Select((i,p) => new { i, p}).First(i => i.i == input.Max()).p;
+	var m = input[pos];
+	input[pos] = 0;
+	while (m > 0){
+		pos++;
+		if (pos >= input.Length)
+			pos = 0;
+		input[pos]++;
+		m--;
+	}
+	stamp = input.Aggregate("", (a,s) => a+','+s);
+}
+var part1 = allocations.Count();
+part1.Dump();
+
+// part 2
+var part2 = 0;
+do
+{
+	part2++;
+	var pos = input.Select((i, p) => new { i, p }).First(i => i.i == input.Max()).p;
+	var m = input[pos];
+	input[pos] = 0;
+	while (m > 0)
+	{
+		pos++;
+		if (pos >= input.Length)
+			pos = 0;
+		input[pos]++;
+		m--;
+	}
+} while (stamp != input.Aggregate("", (a, s) => a + ',' + s));
+part2.Dump();
+```
+
+
+### Day 5 - [[A Maze of Twisty Trampolines, All Alike]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 5 - A Maze of Twisty Trampolines, All Alike.linq)
 
 ```csharp
 var jumps = input.ToArray();
@@ -33,7 +77,7 @@ while (pos < jumps.Length)
 ```
 
 
-### Day 4 - [[High-Entropy Passphrases]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%204%20-%20High-Entropy%20Passphrases.linq)
+### Day 4 - [[High-Entropy Passphrases]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 4 - High-Entropy Passphrases.linq)
 
 ```csharp
 var part1 = input.Select(i => i.Split().GroupBy(x => x)).Where(o => o.All(oo => oo.Count() == 1)).Count();
@@ -43,7 +87,7 @@ var part2 = input.Select(i => i.Split().Select(w => new string(w.OrderBy(c => c)
 ```
 
 
-### Day 3 - [[Spiral Memory]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%203%20-%20Spiral%20Memory.linq)
+### Day 3 - [[Spiral Memory]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 3 - Spiral Memory.linq)
 
 ```csharp
 // part 1
@@ -92,7 +136,7 @@ var part2 = grid.Values.Max();
 ```
 
 
-### Day 2 - [[Corruption Checksum]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%202%20-%20Corruption%20Checksum.linq)
+### Day 2 - [[Corruption Checksum]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 2 - Corruption Checksum.linq)
 
 ```csharp
 var part1 = lines.Select(l => l.Max() - l.Min()).Sum();
@@ -111,7 +155,7 @@ var part2 = lines.Select(l => EvenlyDivisible(l.ToArray())).Sum();
 ```
 
 
-### Day 1 - [[Inverse Captcha]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day%201%20-%20Inverse%20Captcha.linq)
+### Day 1 - [[Inverse Captcha]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 1 - Inverse Captcha.linq)
 
 ```csharp
 var part1 = input.Zip(input.Skip(1).Concat(input), (a, b) => a == b ? a - '0' : 0).Sum();
