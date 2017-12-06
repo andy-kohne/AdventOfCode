@@ -25,20 +25,5 @@ var part1 = allocations.Count();
 part1.Dump();
 
 // part 2
-var part2 = 0;
-do
-{
-	part2++;
-	var pos = input.Select((i, p) => new { i, p }).First(i => i.i == input.Max()).p;
-	var m = input[pos];
-	input[pos] = 0;
-	while (m > 0)
-	{
-		pos++;
-		if (pos >= input.Length)
-			pos = 0;
-		input[pos]++;
-		m--;
-	}
-} while (stamp != input.Aggregate("", (a, s) => a + ',' + s));
+var part2 = allocations.Count() - allocations.IndexOf(stamp);
 part2.Dump();
