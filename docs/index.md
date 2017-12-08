@@ -7,12 +7,13 @@ layout: default
 ### Day 8 - [[I Heard You Like Registers]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 8 - I Heard You Like Registers.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 8 - I Heard You Like Registers.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
-var instructions = input.Select(s => s.Split(' ')).Select(s => new { Register = s[0], 
-																     Direction = s[1], 
-																	 Amount = int.Parse(s[2]), 
-																	 CondReg = s[4], 
-																	 CondOp = s[5], 
-																	 CondVal = int.Parse(s[6]) });
+var instructions = input.Select(s => s.Split(' ')).Select(s => new { 
+				Register = s[0], 
+				Direction = s[1], 
+				Amount = int.Parse(s[2]), 
+				CondReg = s[4], 
+				CondOp = s[5], 
+				CondVal = int.Parse(s[6]) });
 var regs = instructions.Select(i => i.Register).Distinct().ToDictionary(i => i, i => 0);
 
 var compareFuncs = new Dictionary<string, Func<int, int, bool>>

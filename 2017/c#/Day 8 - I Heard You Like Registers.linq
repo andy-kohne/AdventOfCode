@@ -4,13 +4,17 @@
 
 var input = File.ReadAllLines(Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "..", "day8.txt"));
 
-var instructions = input.Select(s => s.Split(' ')).Select(s => new { Register = s[0], 
-																     Direction = s[1], 
-																	 Amount = int.Parse(s[2]), 
-																	 CondReg = s[4], 
-																	 CondOp = s[5], 
-																	 CondVal = int.Parse(s[6]) });
-var regs = instructions.Select(i => i.Register).Distinct().ToDictionary(i => i, i => 0);
+var instructions = input.Select(s => s.Split(' '))
+						.Select(s => new
+						{
+							Register = s[0],
+							Direction = s[1],
+							Amount = int.Parse(s[2]),
+							CondReg = s[4],
+							CondOp = s[5],
+							CondVal = int.Parse(s[6])
+						});
+var registers = instructions.Select(i => i.Register).Distinct().ToDictionary(i => i, i => 0);
 
 var compareFuncs = new Dictionary<string, Func<int, int, bool>>
 {
@@ -26,13 +30,13 @@ var part2 = 0;
 
 foreach (var i in instructions)
 {
-	if (compareFuncs[i.CondOp](regs[i.CondReg], i.CondVal))
+	if (compareFuncs[i.CondOp](registers[i.CondReg], i.CondVal))
 	{
-		regs[i.Register] += i.Direction == "inc" ? i.Amount : -i.Amount;
-		if (regs[i.Register] > part2) part2 = regs[i.Register];
+		registers[i.Register] += i.Direction == "inc" ? i.Amount : -i.Amount;
+		if (registers[i.Register] > part2) part2 = registers[i.Register];
 	}
 }
 
-var part1 = regs.Max(r => r.Value);
+var part1 = registers.Max(r => r.Value);
 part1.Dump();
 part2.Dump();
