@@ -4,6 +4,35 @@ layout: default
 
 # 2017
 
+### Day 9 - [[Stream Processing]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 9 - Stream Processing.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 9 - Stream Processing.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+```csharp
+var level = 0;
+var garbage = false;
+var part1 = 0;
+var part2 = 0;
+
+for (int i = 0; i < input.Length; i++)
+{
+	if (input[i] == '!')
+		i++;
+	else if (!garbage && input[i] == '{')
+		part1 += ++level;
+	else if (!garbage && input[i] == '}')
+		level -= 1;
+	else if (!garbage && input[i] == '<')
+		garbage = true;
+	else if (garbage && input[i] == '>')
+		garbage = false;
+	else if (garbage)
+		part2++;
+}
+
+part1.Dump();
+part2.Dump();
+```
+
+
 ### Day 8 - [[I Heard You Like Registers]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 8 - I Heard You Like Registers.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 8 - I Heard You Like Registers.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
