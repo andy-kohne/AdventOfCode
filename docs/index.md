@@ -4,6 +4,77 @@ layout: default
 
 # 2017
 
+### Day 11 - [[Hex Ed]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 11 - Hex Ed.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 11 - Hex Ed"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+```csharp
+int x = 0, y = 0, z = 0;
+int current = 0;
+int farthest = 0;
+
+for (int i = 0; i < input.Length; i++)
+{
+	switch (input[i])
+	{
+		case "n": y++; z--; break;
+		case "nw": y++; x--; break;
+		case "ne": x++; z--; break;
+		case "s": y--; z++; break;
+		case "sw": z++; x--; break;
+		case "se": x++; y--; break;
+	}
+	current = (Math.Abs(x) + Math.Abs(y) + Math.Abs(z)) / 2;
+	if (current > farthest)
+		farthest = current;
+}
+
+current.Dump();
+farthest.Dump();
+```
+
+
+### Day 10 - [[Knot Hash]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 10 - Knot Hash.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 10 - Knot Hash"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+```csharp
+byte[] knotHash(byte[] key, int cycles)
+{
+	var clist = Enumerable.Range(0, 256).Select(i => (byte)i).ToArray();
+
+	var pos = 0;
+	var skip = 0;
+
+	for (int c = 0; c < cycles; c++)
+	{
+		foreach (var i in key)
+		{
+			for (int s = 0; s < i / 2; s++)
+			{
+				var a = (pos + s) % clist.Length;
+				var b = (pos + i - s - 1) % clist.Length;
+				var t = clist[a];
+				clist[a] = clist[b];
+				clist[b] = t;
+			}
+			pos += (i + skip);
+			pos = pos % clist.Length;
+
+			skip++;
+		}
+	}
+	return clist;
+}
+
+var hash = knotHash(input, 1);
+var part1 = hash[0] * hash[1];
+part1.Dump();
+
+var source = "34,88,2,222,254,93,150,0,199,255,39,32,137,136,1,167";
+var sparseHash = knotHash(source.Select(c => (byte)c).Concat(new byte[] { 17, 31, 73, 47, 23 }).ToArray(), 64);
+var dense = Enumerable.Range(0, 16).Select(r => sparseHash.Skip(r * 16).Take(16).Aggregate(0, (s, a) => s ^ a)).Select(i => (byte)i).ToArray();
+var part2 = BitConverter.ToString(dense).Replace("-", "").ToLower();
+part2.Dump();
+```
+
+
 ### Day 9 - [[Stream Processing]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 9 - Stream Processing.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 9 - Stream Processing.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
