@@ -4,7 +4,37 @@ layout: default
 
 # 2017
 
-### Day 16 - [[Permutation Promenade]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 16 - Permutation Promenade.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 16 - Permutation Promenade"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 17 - [[Spinlock]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 17 - Spinlock.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 17 - Spinlock.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+```csharp
+var buffer = new[] { 0};
+var pos = 0;
+
+for (int i = 1; i <=2017; i++)
+{
+	pos = (pos + input ) % buffer.Length;
+	Array.Resize(ref buffer, buffer.Length + 1);
+	Array.Copy(buffer, pos, buffer, pos +1, buffer.Length -pos -1);
+	pos++;
+	buffer[pos] = i;
+}
+var part1 = buffer[pos+1];
+part1.Dump();
+
+
+pos =0;
+var part2 = 0;
+for (int i = 1; i <= 50_000_000; i++)
+{
+	pos = (pos + input) % i;
+	if (pos == 0) part2 = i;
+	pos++;
+}
+part2.Dump();
+```
+
+
+### Day 16 - [[Permutation Promenade]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 16 - Permutation Promenade.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 16 - Permutation Promenade.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
 var dancemoves = input.Select(o => new { Move = o[0], Parms = o.Substring(1).Split('/') })
@@ -53,7 +83,7 @@ part2.Dump();
 ```
 
 
-### Day 15 - [[Dueling Generators]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 15 - Dueling Generators.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 15 - Dueling Generators"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 15 - [[Dueling Generators]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 15 - Dueling Generators.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 15 - Dueling Generators.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
 uint generate(uint last, int factor) => (uint)((ulong)(last * factor) % 2147483647);
@@ -93,7 +123,7 @@ p2.Dump();
 ```
 
 
-### Day 13 - [[Packet Scanners]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 13 - Packet Scanners.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 13 - Packet Scanners"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 13 - [[Packet Scanners]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 13 - Packet Scanners.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 13 - Packet Scanners.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
 bool isCaught(int layer, int delay) => input.TryGetValue(layer, out int depth) && (layer + delay) % (((depth - 2) * 2) + 2) == 0;
@@ -110,7 +140,7 @@ part2.Dump();
 ```
 
 
-### Day 12 - [[Digital Plumber]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 12 - Digital Plumber.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 12 - Digital Plumber"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 12 - [[Digital Plumber]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 12 - Digital Plumber.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 12 - Digital Plumber.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
 var progs = input.Select(i => i.Split(new[] { "<->" }, StringSplitOptions.None)).ToDictionary(i => int.Parse(i[0]), i => i[1].Split(',').Select(o => int.Parse(o)).ToArray());
@@ -141,7 +171,7 @@ part2.Count().Dump();
 ```
 
 
-### Day 11 - [[Hex Ed]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 11 - Hex Ed.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 11 - Hex Ed"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 11 - [[Hex Ed]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 11 - Hex Ed.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 11 - Hex Ed.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
 int x = 0, y = 0, z = 0;
@@ -169,7 +199,7 @@ farthest.Dump();
 ```
 
 
-### Day 10 - [[Knot Hash]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 10 - Knot Hash.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 10 - Knot Hash"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 10 - [[Knot Hash]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 10 - Knot Hash.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 10 - Knot Hash.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
 byte[] knotHash(byte[] key, int cycles)
