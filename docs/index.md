@@ -4,6 +4,46 @@ layout: default
 
 # 2017
 
+### Day 19 - [[A Series of Tubes]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 19 - A Series of Tubes.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 19 - A Series of Tubes.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+```csharp
+var x = input[0].IndexOf("|");
+var y = 0;
+var lastx = x;
+var lasty = -1;
+
+var part1 = "";
+var part2 = 0;
+
+while (input[y][x] != ' ')
+{
+	var dx = x - lastx;
+	var dy = y - lasty;
+
+	lastx = x;
+	lasty = y;
+
+	if (input[y][x] == '+')
+	{
+		if (dx == 0)
+			x += input[y][x - 1] == ' ' ? 1 : -1;
+		else
+			y += input[y - 1][x] == ' ' ? 1 : -1;
+	}
+	else
+	{
+		if (input[y][x] != '-' && input[y][x] != '|')
+			part1 += input[y][x];
+		x += dx;
+		y += dy;
+	}
+	part2++;
+}
+
+part1.Dump();
+part2.Dump();
+```
+
 ### Day 18 - [[Duet]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 18 - Duet.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 18 - Duet.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
