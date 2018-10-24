@@ -1,8 +1,69 @@
 ---
 layout: default
 ---
+# 2017
 
-### Day 21 - [[Sporifica Virus]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 22 - Sporifica Virus) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 22 - Sporifica Virus.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+### Day 23 - [[Coprocessor Conflagration]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 23 - Coprocessor Conflagration) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 23 - Coprocessor Conflagration.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+```csharp
+var input = File.ReadAllLines(Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "..", "day23.txt"));
+
+var instructions = input.Select(i => i.Split()).Select(i => new { op = i[0], reg = i[1], parm = i.Length > 2 ? i[2] : "" }).ToArray();
+var registers = Enumerable.Range(0,8).ToDictionary(e => ((char)('a'+e)).ToString(), e=> 0L);
+long get(Dictionary<string, long> regs, string x) => long.TryParse(x, out long y) ? y : regs[x];
+
+var mulCtr = 0;
+bool doInst(Dictionary<string, long> regs, ref long ins)
+{
+	if (ins < -1 || ins >= instructions.Length) return false;
+	var reg = instructions[ins].reg;
+	switch (instructions[ins].op)
+	{
+		case "set": regs[reg] = get(regs, instructions[ins].parm); break;
+		case "sub": regs[reg] -= get(regs, instructions[ins].parm); break;
+		case "mul": regs[reg] *= get(regs, instructions[ins].parm); mulCtr++; break;
+		case "jnz": if (get(regs, reg) != 0) { ins += long.Parse(instructions[ins].parm); ins--; } break;
+	}
+	ins++;
+	return true;
+}
+
+var pos = 0L;
+while (doInst(registers, ref pos))
+{ }
+mulCtr.Dump();
+
+
+// part 2
+var b = 67;
+var c = b;
+var a = 1;
+int h = 0;
+
+if (a != 0)
+{
+	b = (b * 100) + 100000;
+	c = b + 17000;
+}
+
+do
+{
+	for (var d = 2; d < b; d++)
+	{
+		if (b % d == 0)
+		{
+			h++;
+			break;
+		}
+	}
+
+	b += 17;
+} while (b - c != 17);
+h.Dump();
+```
+
+### Day 22 - [[Sporifica Virus]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 22 - Sporifica Virus) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 22 - Sporifica Virus.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
 var input = File.ReadAllLines(Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "..", "day22.txt"));
@@ -79,8 +140,6 @@ for (var burst = 0; burst < 10000000; burst++)
 }
 part2.Dump();
 ```
-
-# 2017
 
 ### Day 21 - [[Fractal Art]](https://github.com/andy-kohne/AdventOfCode/blob/master/2017/c%23/Day 21 - Fractal Art.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2017/c%23/Day 21 - Fractal Art.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
