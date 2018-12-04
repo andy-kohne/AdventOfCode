@@ -1,7 +1,6 @@
 <Query Kind="Statements">
   <Reference>&lt;RuntimeDirectory&gt;\System.configuration.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Security.dll</Reference>
-  <NuGetReference>EPPlus</NuGetReference>
   <Namespace>System.Configuration</Namespace>
 </Query>
 
