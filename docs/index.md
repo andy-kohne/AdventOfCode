@@ -5,7 +5,7 @@ layout: default
 
 
 
-### Day 2 - [[Inverse Captcha]](https://github.com/andy-kohne/AdventOfCode/blob/master/2018/c%23/Day 2 - Inventory Management System.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2018/c%23/Day 2 - Inventory Management System.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 2 - [[Inventory Management System]](https://github.com/andy-kohne/AdventOfCode/blob/master/2018/c%23/Day 2 - Inventory Management System.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2018/c%23/Day 2 - Inventory Management System.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
 var counts = input.Select(i => i.GroupBy(c => c).Select(c => new { character = c, count = c.Count() }).ToList());
