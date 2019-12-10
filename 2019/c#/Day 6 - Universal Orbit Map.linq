@@ -11,12 +11,12 @@ IEnumerable<string> getOrbits(Dictionary<string, string> map, string key)
 	}
 }
 
-var d = input.ToDictionary(i => i.Split(')')[1], i => i.Split(')')[0]);
-var part1 = d.Sum(i => getOrbits(d, i.Key).Count());
+var orbits = input.Select(i => i.Split(')')).ToDictionary(i => i[1], i => i[0]);
+var part1 = orbits.Sum(i => getOrbits(orbits, i.Key).Count());
 part1.Dump();
 
-var you = getOrbits(d, "YOU").ToList();
-var santa = getOrbits(d, "SAN").ToList();
+var you = getOrbits(orbits, "YOU").ToList();
+var santa = getOrbits(orbits, "SAN").ToList();
 var common = you.Intersect(santa).First();
 
 var part2 = you.IndexOf(common) + santa.IndexOf(common);
