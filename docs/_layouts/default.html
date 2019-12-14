@@ -32,9 +32,9 @@
 
     <div class="container">
       <div class="menu">
-        <a href="index" class="menu-element">2019</a>
-        <a href="2018" class="menu-element">2018</a>
-        <a href="2017" class="menu-element">2017</a>
+        <a href="index" class="menu-item">2019</a>
+        <a href="2018" class="menu-item">2018</a>
+        <a href="2017" class="menu-item">2017</a>
     </div>       
     <section id="main_content">
         {{ content }}
@@ -45,7 +45,7 @@
 
       jQuery(document).ready(function($){
         var url = window.location.href;
-        $('.menu a').filter(function() {
+        $('.menu-item').filter(function() {
               return this.href == url;
           }).addClass('active');
       });
