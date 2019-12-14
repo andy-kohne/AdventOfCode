@@ -45,10 +45,10 @@
 
       jQuery(document).ready(function($){
         var url = window.location.href;
-            $('.menu a').filter(function() {
+        $('.menu a').filter(function() {
               return this.href == url;
-          }).addClass('active');​
-        });
+          }).addClass('active');
+      });
     </script>
 
     {% if site.google_analytics %}

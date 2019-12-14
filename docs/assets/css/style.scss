@@ -39,6 +39,12 @@ h2:not(.description)
     text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
 }
 
+.menu-item {
+    font-size: 30px;
+    color: #00cc00;    
+    text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
+} 
+
 .menu-item:not(.active){
     color: #009900;
     text-decoration: none;
