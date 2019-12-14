@@ -31,12 +31,16 @@ header {
     margin-bottom: 0px;
 }
 .container h1,
-.container .menu,
+.menu .menu-item,
 header h1,
 h2:not(.description)
 {
     color: #00cc00;    
     text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
+}
+
+.menu {
+    margin-bottom:12px;
 }
 
 .menu-item {
