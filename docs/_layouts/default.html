@@ -32,7 +32,7 @@
 
     <div class="container">
       <div class="menu">
-        <a href="index" class="menu-item">2019</a>
+        <a href="./" class="menu-item">2019</a>
         <a href="2018" class="menu-item">2018</a>
         <a href="2017" class="menu-item">2017</a>
     </div>       
@@ -48,6 +48,10 @@
         $('.menu-item').filter(function() {
               return this.href == url;
           }).addClass('active');
+        if($('.active').length > 0)
+        {
+          $('.menu-item:first').addClass('active');
+        }
       });
     </script>
 

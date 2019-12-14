@@ -1,8 +1,6 @@
 ---
 layout: default
 ---
-# 2019
-
 
 
 ### Day 13 - [[Care Package]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 13 - Care Package.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 13 - Care Package.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
