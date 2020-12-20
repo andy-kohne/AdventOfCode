@@ -49,7 +49,7 @@
         $('.menu-item').filter(function() {
               return this.href == url;
           }).addClass('active');
-        if($('.menu-item .active').length == 0)
+        if($('.menu-item.active').length == 0)
         {
           $('.menu-item:first').addClass('active');
         }
