@@ -3,693 +3,279 @@ layout: default
 ---
 
 
-### Day 13 - [[Care Package]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 13 - Care Package.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 13 - Care Package.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 10 - [[Adapter Array]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 10 - Adapter Array.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 10 - Adapter Array.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
-void Main()
+var jolts = new[] { 0, input.Max()+3 }.Concat(input).OrderBy(o => o).ToArray();
+
+var diffs = jolts.Zip(jolts.Skip(1), (a,b) =>  b-a).GroupBy(j => j).ToDictionary(g => g.Key, g => g.Count());
+var part1 = diffs[1] * diffs[3];
+part1.Dump();
+
+var connections = new Dictionary<int, long> { { 0, 1 }};
+foreach (var jolt in jolts.Skip(1))
 {
-	var comp = new IntCodeComputer(input.ToArray());
-	var board = new Dictionary<(long x, long y), int>();
-	
-	while (!comp.Halted){
-		comp.GetNext(out var x);
-		comp.GetNext(out var y);
-		comp.GetNext(out var t);
-		if (!comp.Halted)
-			board[((long)x,(long)y)] = (int)t;
-	};
-	
-	var part1 = board.Count(t => t.Value == 2);
-	part1.Dump();
+	connections[jolt] = (connections.TryGetValue(jolt - 1, out var one) ? one : 0) +
+						(connections.TryGetValue(jolt - 2, out var two) ? two : 0) +
+						(connections.TryGetValue(jolt - 3, out var three) ? three : 0);
+}
+var part2 = connections[jolts.Max()];
+part2.Dump();
+```
 
 
-	comp = new IntCodeComputer(input.ToArray());
-	board = new Dictionary<(long x, long y), int>();
-	comp._mem[0] = 2;
-	var score = 0;
+### Day 9 - [[Encoding Error]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 9 - Encoding Error.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 9 - Encoding Error.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
-	do
+```csharp
+IEnumerable<(T, T)> Pairs<T>(IList<T> items)
+{
+	for (var outer = 0; outer < items.Count() - 1; outer++)
+		for (var inner = outer + 1; inner < items.Count(); inner++)
+			if (!items[outer].Equals(items[inner]))
+				yield return (items[outer], items[inner]);
+}
+
+bool isValid(int pos) => Pairs(input.Skip(pos-25).Take(25).ToList()).Any(p => p.Item1 + p.Item2 == input[pos]);
+var part1 = Enumerable.Range(25, input.Length-25).Where(i => !isValid(i)).Select(i => input[i]).First();
+
+long[] findWeakness(int pos){
+	var numbers = new List<long>();
+	while (numbers.Sum() < part1)
+		numbers.Add(input[pos+numbers.Count()]);
+	return numbers.Sum() == part1 ? numbers.ToArray() : null;
+}
+
+var w = Enumerable.Range(0, input.Length).Select(findWeakness).First(o => o != null);
+var part2 = w.Max() + w.Min();
+part2.Dump();
+```
+
+
+### Day 8 - [[Handheld Halting]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 8 - Handheld Halting.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 8 - Handheld Halting.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+```csharp
+(bool, int) Run(List<List<string>> code)
+{
+	var executed = new Dictionary<int, int>();
+
+	var ptr = 0;
+	var acc = 0;
+	while (ptr < code.Count)
 	{
-		comp.GetNext(out var x);
-		if (x == null){
-			var ball = board.First(ti => ti.Value == 4).Key.x;
-			var paddle = board.First(ti => ti.Value == 3).Key.x;
-			comp.Input.Enqueue(ball.CompareTo(paddle));
+		if (executed.ContainsKey(ptr))
+			return (false, acc);
+		
+		executed[ptr] = 1;
+		var cmd = code[ptr];
+		switch (cmd[0])
+		{
+			case "acc":
+				acc += int.Parse(cmd[1]);
+				ptr++;
+				break;
+			case "nop":
+				ptr++;
+				break;
+			case "jmp":
+				ptr += int.Parse(cmd[1]);
+				break;
+		}
+	}
+	return (true, acc);
+}
+
+(_, var part1) = Run(input);
+part1.Dump();
+
+for (int i = 0; i < input.Count(); i++){
+	var altered = input.Select(o => o.Select(ii => ii).ToList()).ToList();
+	if (altered[i][0] == "nop"){
+		altered[i][0] = "jmp";
+	}
+	else if (altered[i][0] == "jmp"){
+		altered[i][0] = "nop";
+	}
+	else{
+		continue;
+	}
+	(var result, var part2) = Run(altered);
+	if (result == true){
+		part2.Dump();
+	}
+}
+```
+
+
+### Day 7 - [[Handy Haversacks]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 7 - Handy Haversacks.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 7 - Handy Haversacks.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+```csharp
+var rules = input.Select(i => Regex.Match(i, @"^(.+) bags contain (no other bags|(([ ]*\d ([^,]+) bag[^,]*[,]?)*)).$")).ToDictionary(m => m.Groups[1].Value, m => m.Groups[3].Value.Split(',').Where(i => !string.IsNullOrEmpty(i)).Select(i => Regex.Match(i, @"(\d+) (.+) bag")).Select(i => (count: int.Parse(i.Groups[1].Value),bag: i.Groups[2].Value)).ToArray());
+
+bool CanContain(string bag, string inner) =>  rules[bag].Any(i => i.bag == inner || CanContain(i.bag, inner));
+var part1 = rules.Count(r => CanContain(r.Key, "shiny gold"));
+part1.Dump();
+
+
+int Contains(string bag) => rules[bag].Sum(v => v.count + (v.count * Contains(v.bag)));
+var part2 = Contains("shiny gold");
+part2.Dump();
+```
+
+
+### Day 6 - [[Custom Customs]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 6 - Custom Customs.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 6 - Custom Customs.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+
+```csharp
+IEnumerable<List<string>> GetGroups(string[] raw)
+{
+	var e = raw.GetEnumerator();
+	var s = new List<string>();
+	while (e.MoveNext())
+	{
+		var line = (string)e.Current;
+		if (string.IsNullOrEmpty(line))
+		{
+			yield return s;
+			s = new List<string>();
 			continue;
 		}
-		comp.GetNext(out var y);
-		comp.GetNext(out var t);
-		if (x == -1 && y == 0)
-			score = (int)t;		
-		else if (!comp.Halted)
-			board[((long)x, (long)y)] = (int)t;		
-	} while (!comp.Halted);
-	
-	var part2 = score;
-	part2.Dump();
-}
-
-
-class IntCodeComputer
-{
-	public readonly Dictionary<long, long> _mem;
-	private long ptr = 0;
-	private long relativebase = 0;
-	public IntCodeComputer(long[] program)
-	{
-		_mem = program.Select((p, i) => new { p, i = (long)(i) }).ToDictionary(o => (long)o.i, o => (long)o.p);
+		s.Add(line);
 	}
-	public readonly Queue<int> Input = new Queue<int>();
-
-	public bool Halted;
-	public void GetNext(out long? output)
-	{
-		(int[] parmModes, int opcode) op;
-		(int[] parmModes, int opcode) readOpCode(int opCode) => (new[] { (opCode / 100) % 10, (opCode / 1000) % 10, (opCode / 10000) % 10 }, opCode % 100);
-		long readMem(long pos) => _mem.ContainsKey(pos) ? _mem[pos] : 0;
-		long getParmVal(int mode, long value) => mode == 0 ? readMem(value) : mode == 2 ? readMem(relativebase + value) : value;
-		long getParm(long parm) => getParmVal(op.parmModes[parm - 1], _mem[ptr + parm]);
-		void setParmVal(int mode, long val, long value) { if (mode == 2) _mem[relativebase + val] = value; else _mem[val] = value; }
-		void setParm(long parm, long val) => setParmVal(op.parmModes[parm - 1], _mem[ptr + parm], val);
-
-		output = default;
-		while (_mem[ptr] != 99)
-		{
-			op = readOpCode((int)_mem[ptr]);
-			switch (op.opcode)
-			{
-				case 1: setParm(3, getParm(1) + getParm(2)); ptr += 4; break;
-				case 2: setParm(3, getParm(1) * getParm(2)); ptr += 4; break;
-				case 3: if (Input.Count() == 0) return; setParm(1, Input.Dequeue()); ptr += 2; break;
-				case 4: output = getParm(1); ptr += 2; return; break;
-				case 5: ptr = getParm(1) != 0 ? getParm(2) : ptr + 3; break;
-				case 6: ptr = getParm(1) == 0 ? getParm(2) : ptr + 3; break;
-				case 7: setParm(3, getParm(1) < getParm(2) ? 1 : 0); ptr += 4; break;
-				case 8: setParm(3, getParm(1) == getParm(2) ? 1 : 0); ptr += 4; break;
-				case 9: relativebase += getParm(1); ptr += 2; break;
-			}
-		}
-		Halted=true;
-	}
-}
-```
-
-
-### Day 12 - [[The N-Body Problem]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 12 - The N-Body Problem.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 12 - The N-Body Problem.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
-
-```csharp
-var moons = input.Select(i => Regex.Match(i, @"x=(\-?\d+), y=(\-?\d+), z=(\-?\d+)")).Select(i => (x: int.Parse(i.Groups[1].Value), y: int.Parse(i.Groups[2].Value), z: int.Parse(i.Groups[3].Value))).ToArray();
-var velocity = Enumerable.Range(0, 4).Select(e => (x: 0, y: 0, z: 0)).ToArray();
-
-int energy((int x, int y, int z) e) => Math.Abs(e.x) + Math.Abs(e.y) + Math.Abs(e.z);
-void ApplyVelocity()
-{
-	for (int i = 0; i < 4; i++)
-	{
-		moons[i].x += velocity[i].x;
-		moons[i].y += velocity[i].y;
-		moons[i].z += velocity[i].z;
-	}
-}
-void ApplyGravity()
-{
-	for (int left = 0; left < 4; left++)
-	{
-		for (int right = left + 1; right < 4; right++)
-		{
-			if (moons[left].x > moons[right].x)
-			{
-				velocity[left].x--;
-				velocity[right].x++;
-			}
-			else if (moons[left].x < moons[right].x)
-			{
-				velocity[left].x++;
-				velocity[right].x--;
-			}
-
-			if (moons[left].y > moons[right].y)
-			{
-				velocity[left].y--;
-				velocity[right].y++;
-			}
-			else if (moons[left].y < moons[right].y)
-			{
-				velocity[left].y++;
-				velocity[right].y--;
-			}
-
-			if (moons[left].z > moons[right].z)
-			{
-				velocity[left].z--;
-				velocity[right].z++;
-			}
-			else if (moons[left].z < moons[right].z)
-			{
-				velocity[left].z++;
-				velocity[right].z--;
-			}
-		}
-
-	}
+	yield return s;
 }
 
+var groups = GetGroups(input).ToList();
 
-for (int step = 0; step < 1000; step++)
-{
-	ApplyGravity();
-	ApplyVelocity();
-}
-
-var part1 = Enumerable.Range(0, 4).Select(e => energy(moons[e]) * energy(velocity[e])).Sum();
+var part1 = groups.Sum(g => g.Aggregate((x, y) => x + y).ToCharArray().Distinct().Count());
 part1.Dump();
 
-
-
-(int, int, int, int, int, int, int, int) key(Func<(int x, int y, int z), int> sel) => (sel(moons[0]), sel(velocity[0]), sel(moons[1]), sel(velocity[1]), sel(moons[2]), sel(velocity[2]), sel(moons[3]), sel(velocity[3]));
-long lcm(long a, long b) => Math.Abs(a * b) / gcd(a, b); 
-long gcd(long a, long b) => b == 0 ? a : gcd(b, a % b);
-
-var startingx = key(a => a.x);
-var startingy = key(a => a.y);
-var startingz = key(a => a.z);
-
-long counter = 0, xperiod = 0, yperiod = 0, zperiod = 0;
-
-do
-{
-	counter++;
-	ApplyGravity();
-	ApplyVelocity();
-	if (xperiod == 0 && key(a => a.x) == startingx) xperiod = counter;
-	if (yperiod == 0 && key(a => a.y) == startingy) yperiod = counter;
-	if (zperiod == 0 && key(a => a.z) == startingz) zperiod = counter;
-} while (xperiod == 0 || yperiod == 0 || zperiod == 0);
-
-var part2 = new[] { xperiod, yperiod, zperiod }.Aggregate(lcm);
+var part2 = groups.Sum(g => g.SelectMany(a => a.ToCharArray()).GroupBy(a => a).Count(ga => ga.Count() == g.Count()));
 part2.Dump();
 ```
 
 
-### Day 11 - [[Space Police]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 11 - Space Police.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 11 - Space Police.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 5 - [[Binary Boarding]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 5 - Binary Boarding.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 5 - Binary Boarding.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
-void Main()
+int GetNumber(string id, char lower)
 {
-	var comp = new IntCodeComputer(input.ToArray());
-	var robot = new Robot(0, comp);
-	var part1 = robot.Panels.Count();
-	part1.Dump();
-
-	comp = new IntCodeComputer(input.ToArray());
-	robot = new Robot(1, comp);
-	var minx = robot.Panels.Min(o => o.Key.Item1);
-	var miny = robot.Panels.Min(o => o.Key.Item2);
-
-	var panels = robot.Panels.ToDictionary(p => (p.Key.Item1 + Math.Abs(minx), p.Key.Item2 + Math.Abs(miny)), p => p.Value);
-	var drawing = Enumerable.Range(0, panels.Max(p => p.Key.Item2) + 1).Select(y =>
-	 new string(Enumerable.Range(0, panels.Max(p => p.Key.Item1) + 1).Select(x => panels.TryGetValue((x, y), out var p) ? (p == 1 ? '8' : '_') : '_').ToArray())).ToList();
-
-	for (int i = drawing.Count - 1; i >= 0; i--)
-	{
-		drawing[i].Dump();
-	}
+	var range = (0, (int)Math.Pow(2, id.Length) - 1);
+	for (int i = 0; i < id.Length; i++)
+		range = GetHalf(range, id[i] == lower);
+	return range.Item1;
 }
+(int min, int max) GetHalf((int min, int max) r, bool lower) => lower ? (r.min, r.max - (r.max - r.min + 1) / 2) : (r.min + (r.max - r.min + 1) / 2, r.max);
+int SeatId(string id) => GetNumber(id.Substring(0,7),'F') * 8 + GetNumber(id.Substring(7,3), 'L');
 
-class Robot
-{
-	public readonly Dictionary<(int, int), int> Panels = new Dictionary<(int, int), int>();
-	public Robot(int startingColor, IntCodeComputer comp)
-	{
-
-		int x = 0, y = 0, heading = 0;
-
-		Panels[(x, y)] = startingColor;
-
-		var done = false;
-		while (!done)
-		{
-			comp.Input.Enqueue(Panels.ContainsKey((x, y)) ? Panels[(x, y)] : 0);
-			done = comp.GetNext(out var color);
-			if (!done)
-			{
-				Panels[(x, y)] = (int)color;
-				done = comp.GetNext(out var turn);
-				if (!done)
-				{
-					if (turn == 0)
-					{
-						heading = (heading + 270) % 360;
-					}
-					else
-					{
-						heading = (heading + 90) % 360;
-					}
-					switch (heading)
-					{
-						case 0: y++; break;
-						case 90: x++; break;
-						case 180: y--; break;
-						case 270: x--; break;
-					}
-				}
-			}
-
-		}
-	}
-
-}
-class IntCodeComputer
-{
-	private readonly Dictionary<long, long> _mem;
-	private long ptr = 0;
-	private long relativebase = 0;
-	public IntCodeComputer(long[] program)
-	{
-		_mem = program.Select((p, i) => new { p, i = (long)(i) }).ToDictionary(o => (long)o.i, o => (long)o.p);
-	}
-	public readonly Queue<int> Input = new Queue<int>();
-
-	public bool GetNext(out long? output)
-	{
-		(int[] parmModes, int opcode) op;
-		(int[] parmModes, int opcode) readOpCode(int opCode) => (new[] { (opCode / 100) % 10, (opCode / 1000) % 10, (opCode / 10000) % 10 }, opCode % 100);
-		long readMem(long pos) => _mem.ContainsKey(pos) ? _mem[pos] : 0;
-		long getParmVal(int mode, long value) => mode == 0 ? readMem(value) : mode == 2 ? readMem(relativebase + value) : value;
-		long getParm(long parm) => getParmVal(op.parmModes[parm - 1], _mem[ptr + parm]);
-		void setParmVal(int mode, long val, long value) { if (mode == 2) _mem[relativebase + val] = value; else _mem[val] = value; }
-		void setParm(long parm, long val) => setParmVal(op.parmModes[parm - 1], _mem[ptr + parm], val);
-
-		output = default;
-		while (_mem[ptr] != 99)
-		{
-			op = readOpCode((int)_mem[ptr]);
-			switch (op.opcode)
-			{
-				case 1: setParm(3, getParm(1) + getParm(2)); ptr += 4; break;
-				case 2: setParm(3, getParm(1) * getParm(2)); ptr += 4; break;
-				case 3: if (Input.Count() == 0) return false; setParm(1, Input.Dequeue()); ptr += 2; break;
-				case 4: output = getParm(1); ptr += 2; return false; break;
-				case 5: ptr = getParm(1) != 0 ? getParm(2) : ptr + 3; break;
-				case 6: ptr = getParm(1) == 0 ? getParm(2) : ptr + 3; break;
-				case 7: setParm(3, getParm(1) < getParm(2) ? 1 : 0); ptr += 4; break;
-				case 8: setParm(3, getParm(1) == getParm(2) ? 1 : 0); ptr += 4; break;
-				case 9: relativebase += getParm(1); ptr += 2; break;
-			}
-		}
-		return true;
-	}
-}
-```
-
-
-
-### Day 10 - [[Monitoring Station]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 10 - Monitoring Station.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 10 - Monitoring Station.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
-
-```csharp
-int gcd(int a, int b) => b == 0 ? a : gcd(b, a % b);
-(int, int) reduce((int, int) i) => gcd(i.Item1, i.Item2) == 0 ? (1, 0) : (i.Item1 / gcd(i.Item1, i.Item2), i.Item2 / gcd(i.Item1, i.Item2));
-(int, int) getslope((int x, int y) p1, (int x, int y) p2) => reduce((p2.x - p1.x, p2.y - p1.y));
-
-bool isVisible((int x, int y) p1, (int x, int y) p2, HashSet<(int x, int y)> map)
-{
-	if (p1 == p2) return false;
-	var slope = getslope(p1, p2);
-
-	for (int x = Math.Min(p1.x, p2.x); x <= Math.Max(p1.x, p2.x); x++)
-	{
-		for (int y = Math.Min(p1.y, p2.y); y <= Math.Max(p1.y, p2.y); y++)
-		{
-			if ((x, y) != p1 && (x, y) != p2 && slope == getslope(p1, (x, y)) && map.Contains((x,y))) return false;
-		}
-	}
-	return true;
-}
-
-var asteroids = Enumerable.Range(0, input.Length).SelectMany(row => Enumerable.Range(0, input[row].Length).Where(col => input[row][col] == '#').Select(col => (col, row))).ToHashSet();
-var monitoringstation = asteroids.Select(asteroid => new { asteroid, count = asteroids.Count(aa => isVisible(asteroid, aa, asteroids)) }).OrderByDescending(a => a.count).First();
-
-var part1 = monitoringstation.count;
+var part1 = input.Max(i => SeatId(i));
 part1.Dump();
 
-
-double todegrees(double radians) => (360 + radians * (180 / Math.PI)) % 360;
-double angle((int x, int y) a, (int x, int y) b) => todegrees(Math.Atan2(a.y - b.y, a.x - b.x) - Math.Atan2(1,0));
-double distance((int x, int y) b, (int x, int y) a) => Math.Sqrt(Math.Pow(a.x - b.x, 2) + Math.Pow(a.y - b.y, 2));
-
-var asteroidVectors = asteroids
-			.Where(a => a != monitoringstation.asteroid)
-			.Select(a => new { asteroid = a, vector = (angle: angle(monitoringstation.asteroid, a), dist: distance(a, monitoringstation.asteroid))})
-			.GroupBy(a => a.vector.angle)
-			.OrderBy(a => a.Key)
-			.Select(a => a.OrderBy(v => v.vector.dist).ToList()).ToList();
-
-var destroyed = new List<(int x, int y)>();
-
-while (asteroidVectors.Any(o => o.Any())){
-	foreach (var o in asteroidVectors)
-	{
-		if (o.Any())
-		{
-			destroyed.Add(o.First().asteroid);
-			o.RemoveAt(0);
-		}
-	}
-}
-
-var part2 = destroyed[199].x * 100 + destroyed[199].y;
+var seats = input.Select(SeatId).OrderBy(i => i).ToArray();
+var part2 = seats.Zip(seats.Skip(1), (a, b) => b == a + 2 ? a + 1 : 0).Max();
 part2.Dump();
 ```
 
 
-### Day 9 - [[Sensor Boost]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 9 - Sensor Boost.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 9 - Sensor Boost.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 4 - [[Passport Processing]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 4 - Passport Processing.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 4 - Passport Processing.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
-bool IntCodeComputer(int[] program, IEnumerable<int> inputStream, out IList<long> outputStream)
-{
-	var mem = program.Select((p, i) => new { p, i = (long)(i) }).ToDictionary(o => (long)o.i, o => (long)o.p);
-
-	outputStream = new List<long>();
-	long ptr = 0;
-	long relativebase = 0;
-	var inp = inputStream.GetEnumerator();
-	(int[] parmModes, int opcode) op;
-
-	(int[] parmModes, int opcode) readOpCode(int opCode) => (new[] { (opCode / 100) % 10, (opCode / 1000) % 10, (opCode / 10000) % 10 }, opCode % 100);
-	long getParmVal(int mode, long value) => mode == 0 ? mem[value] : mode == 2 ? mem[relativebase + value] : value;
-	long getParm(long parm) => getParmVal(op.parmModes[parm - 1], mem[ptr + parm]);
-	void setParmVal(int mode, long val, long value)  { if (mode == 2) mem[relativebase + val]=value; else mem[val]=value; }
-	void setParm(long parm, long val) => setParmVal(op.parmModes[parm-1], mem[ptr+parm], val);
-
-	while (mem[ptr] != 99)
-	{
-		op = readOpCode((int)mem[ptr]);
-		switch (op.opcode)
+IEnumerable<Dictionary<string, string>> Parse(string[] raw) {
+	var e = raw.GetEnumerator();
+	var dict = new Dictionary<string,string>();
+	while(e.MoveNext()){
+		var line = (string)e.Current;
+		if (string.IsNullOrEmpty(line))
 		{
-			case 1: setParm(3, getParm(1) + getParm(2)); ptr += 4; break;
-			case 2: setParm(3, getParm(1) * getParm(2)); ptr += 4; break;
-			case 3: if (!inp.MoveNext()) return false; setParm(1, inp.Current); ptr += 2; break;
-			case 4: outputStream.Add(getParm(1)); ptr += 2; break;
-			case 5: ptr = getParm(1) != 0 ? getParm(2) : ptr + 3; break;
-			case 6: ptr = getParm(1) == 0 ? getParm(2) : ptr + 3; break;
-			case 7: setParm(3, getParm(1) < getParm(2) ? 1 : 0); ptr += 4; break;
-			case 8: setParm(3, getParm(1) == getParm(2) ? 1 : 0); ptr += 4; break;
-			case 9: relativebase += getParm(1); ptr += 2; break;
+			yield return dict;
+			dict = new Dictionary<string, string>();
+			continue;
+		}
+		var items = line.Split(' ');
+		foreach (var item in items)
+		{
+			var parts = item.Split(':');
+			dict.Add(parts[0], parts[1]);
 		}
 	}
-	return true;
+	yield return dict;
 }
+var passports = Parse(input);
 
-IntCodeComputer(input.ToArray(), new [] { 1}, out var p1);
-var part1 = p1.Last();
+
+var required = new[] { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
+bool isValid(Dictionary<string,string> passport) => required.All(r => passport.ContainsKey(r));
+var part1 = passports.Count(isValid);
 part1.Dump();
 
-IntCodeComputer(input.ToArray(), new [] { 2}, out var p2);
-var part2 = p2.Last();
+
+var fields = new Dictionary<string, Func<string, bool>> {
+	{ "byr", i => { var n = int.Parse(i); return n >= 1920 && n <= 2002; }},
+	{ "iyr", i => { var n = int.Parse(i); return n >= 2010 && n <= 2020; }},
+	{ "eyr", i => { var n = int.Parse(i); return n >= 2020 && n <= 2030; }},
+	{ "hgt", i => { var m = Regex.Match(i, @"^(\d+)(cm|in)$"); return m.Success && int.TryParse(m.Groups[1].Value, out int n) && (m.Groups[2].Value == "cm" ? n >= 150 && n <= 193 : n>=59 && n <=76 ); }},
+	{ "hcl", i => { return Regex.IsMatch(i, @"^#[0-9a-f]{6}$"); }},
+	{ "ecl", i => { return i == "amb" || i == "blu" || i == "brn" || i == "gry" || i == "grn" || i == "hzl" || i == "oth"; }},
+	{ "pid", i => { return Regex.IsMatch(i, @"^\d{9}$"); }},
+};
+bool isValidPartTwo (Dictionary<string,string> passport) => fields.All(f => passport.ContainsKey(f.Key) && f.Value(passport[f.Key]));
+var part2 = passports.Count(isValidPartTwo);
 part2.Dump();
 ```
 
 
-### Day 8 - [[Space Image Format]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 8 - Space Image Format.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 8 - Space Image Format.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 3 - [[Toboggan Trajectory]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 3 - Toboggan Trajectory.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 3 - Toboggan Trajectory.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
-int width = 25, height = 6;
-var layersize = width * height;
+bool isTree(int row, int col) => input[row][col % input[row].Length] == '#';
 
-var chunks = Enumerable.Range(0, input.Length / layersize).Select(i => input.Substring(i * layersize, layersize));
-var layers = chunks.Select(c => new { Raw = c, Counts = c.ToCharArray().GroupBy(l => l).ToDictionary(g => g.Key, g => g.Count())}).ToList();
-
-var part1 = layers.OrderBy(l => l.Counts['0']).Select(l => l.Counts['1'] * l.Counts['2']).First();
+var part1 = Enumerable.Range(0, input.Length).Count(i => isTree(i, i*3));
 part1.Dump();
 
-var combined = new string(Enumerable.Range(0, layersize).Select(p => layers.First(l => l.Raw[p] != '2').Raw[p]).ToArray());
-combined = combined.Replace('0', '_').Replace('1','8');  // help with image readability
-var part2 = Enumerable.Range(0,height).Select(i => combined.Substring(i * width, width)).ToArray();
+var part2 = (long)Enumerable.Range(0, input.Length).Count(i => isTree(i, i))
+		  * Enumerable.Range(0, input.Length).Count(i => isTree(i, i * 3))
+		  * Enumerable.Range(0, input.Length).Count(i => isTree(i, i * 5))
+		  * Enumerable.Range(0, input.Length).Count(i => isTree(i, i * 7))
+		  * Enumerable.Range(0, input.Length / 2).Count(i => isTree(i * 2, i));
 part2.Dump();
 ```
 
 
-### Day 7 - [[Amplification Circuit]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 7 - Amplification Circuit.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 7 - Amplification Circuit.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 2 - [[Password Philosophy]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 2 - Password Philosophy.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 2 - Password Philosophy.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
-bool IntCodeComputer(int[] mem, IEnumerable<int> inputStream, out IList<int> outputStream)
-{
-	outputStream = new List<int>();
-	var ptr = 0;
-	var inp = inputStream.GetEnumerator();
-	(int[] parmModes, int opcode) op;
+var re = new Regex(@"^(\d+)-(\d+) (.): (.+)$");
+var passwords = input.Select(i => re.Match(i)).Select(i => (min: int.Parse(i.Groups[1].Value) , max: int.Parse(i.Groups[2].Value), c: i.Groups[3].Value.Single(), pw: i.Groups[4].Value) ).ToList();
 
-	(int[] parmModes, int opcode) readOpCode(int opCode) => (new[] { (opCode / 100) % 10, (opCode / 1000) % 10, (opCode / 10000) % 10 }, opCode % 100);
-	int getParmVal(int mode, int value) => mode == 0 ? mem[value] : value;
-	int getParm(int parm) => getParmVal(op.parmModes[parm - 1], mem[ptr + parm]);
-
-	while (mem[ptr] != 99)
-	{
-		op = readOpCode(mem[ptr]);
-		switch (op.opcode)
-		{
-			case 1: mem[mem[ptr + 3]] = getParm(1) + getParm(2); ptr += 4; break;
-			case 2: mem[mem[ptr + 3]] = getParm(1) * getParm(2); ptr += 4; break;
-			case 3: if (!inp.MoveNext()) return false; mem[mem[ptr + 1]] = inp.Current; ptr += 2; break;
-			case 4: outputStream.Add(getParm(1)); ptr += 2; break;
-			case 5: ptr = getParm(1) != 0 ? getParm(2) : ptr + 3; break;
-			case 6: ptr = getParm(1) == 0 ? getParm(2) : ptr + 3; break;
-			case 7: mem[mem[ptr + 3]] = getParm(1) < getParm(2) ? 1 : 0; ptr += 4; break;
-			case 8: mem[mem[ptr + 3]] = getParm(1) == getParm(2) ? 1 : 0; ptr += 4; break;
-		}
-	}
-	return true;
-}
-
-IEnumerable<IEnumerable<T>> Permutations<T>(IEnumerable<T> list, int length = 0)
-{
-	if (length == 0) length = list.Count();
-	if (length == 1) return list.Select(t => new T[] { t });
-
-	return Permutations(list, length - 1)
-		.SelectMany(t => list.Where(e => !t.Contains(e)),
-			(t1, t2) => t1.Concat(new T[] { t2 }));
-}
-
-var part1 = Permutations(Enumerable.Range(0, 5)).Max(phases =>
-{
-	var inp = 0;
-	foreach (var phase in phases)
-	{
-		IntCodeComputer(input.ToArray(), new List<int> { phase, inp }, out var output);
-		inp = output.Last();
-	}
-	return inp;
-});
+var part1 = passwords.Select(item => (item.min, item.max, count: item.pw.Count(p => p == item.c))).Count(item => item.count >= item.min && item.count <= item.max);
 part1.Dump();
 
-
-var part2 = Permutations(Enumerable.Range(5, 5)).Select(o => o.ToList()).Select(phases =>
-{
-	var aIn = new List<int> { phases[0], 0 };
-	var bIn = new List<int> { phases[1] };
-	var cIn = new List<int> { phases[2] };
-	var dIn = new List<int> { phases[3] };
-	var eIn = new List<int> { phases[4] };
-	var done = false;
-	IList<int> output = null;
-	while (!done)
-	{
-		IntCodeComputer(input.ToArray(), aIn, out output);
-		bIn.Add(output.Last());
-		IntCodeComputer(input.ToArray(), bIn, out output);
-		cIn.Add(output.Last());
-		IntCodeComputer(input.ToArray(), cIn, out output);
-		dIn.Add(output.Last());
-		IntCodeComputer(input.ToArray(), dIn, out output);
-		eIn.Add(output.Last());
-		done = IntCodeComputer(input.ToArray(), eIn, out output);
-		aIn.Add(output.Last());
-	}
-	return output.Last();
-}).Max();
+var part2 = passwords.Count(item => item.pw[item.min-1]==item.c ^ item.pw[item.max-1]==item.c);
 part2.Dump();
 ```
 
 
-### Day 6 - [[Universal Orbit Map]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 6 - Universal Orbit Map.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 6 - Universal Orbit Map.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
+### Day 1 - [[Report Repair]](https://github.com/andy-kohne/AdventOfCode/blob/master/2020/c%23/Day 1 - Report Repair.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2020/c%23/Day 1 - Report Repair.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
 
 ```csharp
-IEnumerable<string> getOrbits(Dictionary<string, string> map, string key)
+IEnumerable<(T, T)> Pairs<T>(IList<T> items) {
+	for (var outer = 0; outer < input.Count() -1 ; outer++)
+		for (var inner = outer + 1; inner < input.Count(); inner++)
+			yield return (items[outer], items[inner]);
+}
+
+var pair = Pairs(input).First(p => p.Item1 + p.Item2 == 2020);
+var part1 = pair.Item1 * pair.Item2;
+part1.Dump();
+
+
+IEnumerable<(T, T, T)> Triples<T>(IList<T> items)
 {
-	while (key != "COM")
-	{
-		yield return map[key];
-		key = map[key];
-	}
+	for (var x = 0; x < input.Count() - 2; x++)
+		for (var y = x + 1; y < input.Count() - 1; y++)
+			for (var z = y + 1; z < input.Count(); z++)
+				yield return (items[x], items[y], items[z]);
 }
 
-var orbits = input.Select(i => i.Split(')')).ToDictionary(i => i[1], i => i[0]);
-var part1 = orbits.Sum(i => getOrbits(orbits, i.Key).Count());
-part1.Dump();
-
-var you = getOrbits(orbits, "YOU").ToList();
-var santa = getOrbits(orbits, "SAN").ToList();
-var common = you.Intersect(santa).First();
-
-var part2 = you.IndexOf(common) + santa.IndexOf(common);
-part2.Dump();
-```
-
-
-### Day 5 - [[Sunny with a Chance of Asteroids]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 5 - Sunny with a Chance of Asteroids.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 5 - Sunny with a Chance of Asteroids.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
-
-```csharp
-IEnumerable<int> IntCodeComputer(int[] mem, IEnumerable<int> inputStream)
-{
-	var ptr = 0;
-	var inp = inputStream.GetEnumerator();
-	(int[] parmModes, int opcode) op;
-
-	(int[] parmModes, int opcode) readOpCode(int opCode) => (new[] { (opCode / 100) % 10, (opCode / 1000) % 10, (opCode / 10000) % 10 }, opCode % 100);
-	int getParmVal(int mode, int value) => mode == 0 ? mem[value] : value;
-	int getParm(int parm) => getParmVal(op.parmModes[parm - 1], mem[ptr + parm]);
-
-	while (mem[ptr] != 99)
-	{
-		op = readOpCode(mem[ptr]);
-		switch (op.opcode)
-		{
-			case 1: mem[mem[ptr + 3]] = getParm(1) + getParm(2); ptr += 4; break;
-			case 2: mem[mem[ptr + 3]] = getParm(1) * getParm(2); ptr += 4; break;
-			case 3: inp.MoveNext();	mem[mem[ptr + 1]] = inp.Current; ptr += 2; break;
-			case 4: yield return getParm(1);ptr += 2; break;
-			case 5: ptr = getParm(1) != 0 ? getParm(2) : ptr + 3; break;
-			case 6: ptr = getParm(1) == 0 ? getParm(2) : ptr + 3; break;
-			case 7: mem[mem[ptr + 3]] = getParm(1) < getParm(2) ? 1 : 0; ptr += 4; break;
-			case 8: mem[mem[ptr + 3]] = getParm(1) == getParm(2) ? 1 : 0;ptr += 4; break;
-		}
-	}
-}
-
-
-var part1 = IntCodeComputer(input.ToArray(), new[] { 1 }).Last();
-part1.Dump();
-
-var part2 = IntCodeComputer(input.ToArray(), new[] { 5 }).Last();
-part2.Dump();
-```
-
-
-### Day 4 - [[Secure Container]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 4 - Secure Container.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 4 - Secure Container.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
-
-```csharp
-bool HasDoubleDigit(string pw) => pw[0] == pw[1] || pw[1] == pw[2] || pw[2] == pw[3] || pw[3] ==pw[4] || pw[4] == pw[5];
-bool IsAscending(string pw) => pw[0] <= pw[1] && pw[1] <= pw[2] && pw[2] <= pw[3] && pw[3] <= pw[4] && pw[4] <= pw[5];
-bool HasNotTripledDoubleDigit(string pw) => (pw[0] == pw[1] && pw[2] != pw[1]) ||
-											(pw[0] != pw[1] && pw[1] == pw[2] && pw[2] != pw[3]) ||
-											(pw[1] != pw[2] && pw[2] == pw[3] && pw[3] != pw[4]) ||
-											(pw[2] != pw[3] && pw[3] == pw[4] && pw[4] != pw[5]) ||
-											(pw[3] != pw[4] && pw[4] == pw[5]);
-
-int part1 = 0, part2 = 0;
-for (var pw = 254032; pw <= 789860; pw++){
-	var pws = pw.ToString();
-	if (HasDoubleDigit(pws) && IsAscending(pws))
-	{
-		part1++;
-		if (HasNotTripledDoubleDigit(pws))
-			part2++;
-	}
-	
-}
-
-part1.Dump();
-part2.Dump();
-```
-
-
-### Day 3 - [[Crossed Wires]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 3 - Crossed Wires.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 3 - Crossed Wires.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
-
-```csharp
-IEnumerable<((int X, int Y) position, int steps)> getPoints(string path)
-{
-	var steps = path.Split(',').Select(p => (dir: p[0], dist: int.Parse(p.Substring(1))));
-	int x = 0, y = 0, c = 0; 
-	foreach (var step in steps)
-	{
-		switch (step.dir)
-		{
-			case 'R': for (var i = 0; i < step.dist; i++) yield return ((x++, y), c++); break;
-			case 'L': for (var i = 0; i < step.dist; i++) yield return ((x--, y), c++); break;
-			case 'U': for (var i = 0; i < step.dist; i++) yield return ((x, y++), c++); break;
-			case 'D': for (var i = 0; i < step.dist; i++) yield return ((x, y--), c++); break;
-		}
-	}
-}
-
-var path1 = getPoints(input[0]);
-var path2 = getPoints(input[1]);
-
-var intersect = path1.GroupBy(p => p.position).Join(path2.GroupBy(p => p.position), 
-													p => p.Key, 
-													p => p.Key, 
-													(o, i) => new { o.Key, path1 = o.Min(s => s.steps), path2 = i.Min(s => s.steps) })
-														.Skip(1).ToList();
-
-var part1 = intersect.Min(p => Math.Abs(p.Key.X) + Math.Abs(p.Key.Y));
-part1.Dump();
-
-var part2 = intersect.Min(i => i.path1 + i.path2);
-part2.Dump();
-```
-
-
-### Day 2 - [[1202 Program Alarm]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 2 - 1202 Program Alarm.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 2 - 1202 Program Alarm.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
-
-```csharp
-void IntCodeComputer(int[] instructions) {
-	var ptr = 0;
-	while (instructions[ptr] != 99)
-	{
-		var regA = instructions[instructions[ptr + 1]];
-		var regB = instructions[instructions[ptr + 2]];
-		instructions[instructions[ptr + 3]] =
-			instructions[ptr] == 1
-				? regA + regB
-				: regA * regB;
-		ptr += 4;
-	}	
-}
-
-var part1 = input.Select(i => i).ToArray();
-part1[1] = 12;
-part1[2] = 2;
-IntCodeComputer(part1);
-part1[0].Dump();
-
-for (var noun = 0; noun < 100; noun++){
-	for (var verb = 0; verb < 100; verb++)
-	{
-		var part2 = input.Select(i => i).ToArray();
-		part2[1] = noun;
-		part2[2] = verb;
-		IntCodeComputer(part2);
-		if (part2[0] == 19690720)
-		{
-			(100*noun+verb).Dump();
-			return;
-		}
-	}
-}
-```
-
-
-### Day 1 - [[The Tyranny of the Rocket Equation]](https://github.com/andy-kohne/AdventOfCode/blob/master/2019/c%23/Day 1 - The Tyranny of the Rocket Equation.linq) <a class="linqpad" href="https://raw.githubusercontent.com/andy-kohne/AdventOfCode/master/2019/c%23/Day 1 - The Tyranny of the Rocket Equation.linq"  title="Download LinqPad script" download><img src="LINQPad.png" alt=""/></a>
-
-```csharp
-var part1 = input.Select(mass => (mass/3)-2).Sum();
-part1.Dump();
-
-int additionalFuel(int mass) {
-	var f = (mass/3)-2;
-	return f > 0 ? f + additionalFuel(f) : 0;
-}
-var part2 = input.Select(additionalFuel).Sum();
+var triple = Triples(input).First(p => p.Item1 + p.Item2 + p.Item3 == 2020);
+var part2 = triple.Item1 * triple.Item2 * triple.Item3;
 part2.Dump();
 ```
