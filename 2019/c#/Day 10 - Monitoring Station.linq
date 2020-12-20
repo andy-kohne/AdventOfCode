@@ -1,6 +1,4 @@
-<Query Kind="Statements">
-  <Namespace>System.Threading.Tasks</Namespace>
-</Query>
+<Query Kind="Statements" />
 
 var input = File.ReadAllLines(Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "..", "day10.txt"));
 
